@@ -7,8 +7,8 @@ import argparse
 import pandas as pd
 
 parser = argparse.ArgumentParser(description='Convert numbers to letters (-1=U, 0=A, 1=B, and 2=A).')
-parser.add_argument('--input', help='filename input')
-parser.add_argument('--output', help='filename for the shell script', default="out.sh")
+parser.add_argument('--input', help='filename for the input file')
+parser.add_argument('--output', help='filename for the output file', default="out")
 parser.add_argument('--debug', help='print debug output', action="store_true")
 args = parser.parse_args()
 
