@@ -13,7 +13,7 @@ parser.add_argument('--threshold', help='only extract values strictly greater th
 parser.add_argument('--debug', help='print debug output', action="store_true")
 args = parser.parse_args()
 
-# open the file, find sepcified line and save said line to list
+# open the file, find specified line and save said line to list
 lst = []
 with open(args.input) as f: 
 	content = f.readlines()
