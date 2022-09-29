@@ -15,73 +15,102 @@ parser.add_argument('--debug', help='print debug output', action="store_true")
 args = parser.parse_args()
 
 aboveTInd = []
-scaffsAboveT = []
+linkageGroupInd = []
 moderateScaffs = []
 severeScaffs = []
 index1 = 0
 index2 = 0
 index3 = 0
+skip2Lines = 2
+lgHasDiff = False
 
 # open the file, find all indices above a certain threshold, and save them
 with open(args.input) as f1: 
-	content = f1.readlines()
-	tempList = content[2].split()	
+    content = f1.readlines()
+    tempList = content[skip2Lines].split()	
 	
-	# store the index of every linkage group above threshold
-	for i in tempList:
-		if i.isnumeric():
-			if int(i) > int(args.threshold):
-				aboveTInd.append(index1)
-			index1 += 1				
+    # store the index of every linkage group above threshold
+    for i in tempList:
+        if i.isnumeric():
+            if int(i) > int(args.threshold):
+                aboveTInd.append(index1)
+            index1 += 1				
 
-# find lines where scaffolds above threshold start and calculate the difference between adjacent scaffolds 
-	for i in content:
+    # find lines where scaffolds above threshold start and calculate the difference between adjacent scaffolds 
+    for i in content:
 		
-		# end loop if there are no more linkage groups above threshold
-		if (index3 >= len(aboveTInd)):
-			break
+        # end loop if there are no more linkage groups above threshold
+        if (index3 >= len(aboveTInd)):
+            break
 		
-		# find groups above threshold 
-		strToComp = "group lg" + str(aboveTInd[index3])
-		if strToComp in i:
-			
-			# magic number
-			j = 2
-			
-			# iterate through linkage group and compare adjacent scaffolds
-			while True:
-				scaff1 = content[index2 + j].split()
-				scaff2 = content[index2 + j + 1].split()	
-				
-				# end loop once terminus is reached
-				if scaff2[0] == ";ENDOFGROUP":
-					break 		
-				diff = float(scaff2[1]) - float(scaff1[1])
-				if diff > float(args.severe):
-					severe = "There is a severe difference between " + scaff1[0] + " and " + scaff2[0] + " and that is: " + str(diff)
-					print(severe)
-					severeScaffs.append(severe)
-				elif diff > float(args.moderate):
-					moderate = "There is a moderate difference between " + scaff1[0] + " and " + scaff2[0] + " and that is: " + str(diff)
-					print(moderate)	
-					moderateScaffs.append(moderate)
-				j += 1
-			index3 += 1
-		index2 += 1
+        # find groups above threshold 
+        strToComp = "group lg" + str(aboveTInd[index3])
+        if strToComp in i:
+            j = skip2Lines
+            tempSev = []
+            tempMod = []
+            
+            # iterate through linkage group and compare adjacent scaffolds
+            while True:
+                scaff1 = content[index2 + j].split()
+                scaff2 = content[index2 + j + 1].split()	
+                
+                # end loop once terminus is reached
+                if scaff2[0] == ";ENDOFGROUP":
+                    break 		
+                diff = float(scaff2[1]) - float(scaff1[1])
+                if diff > float(args.severe):
+                    severe = "There is a severe difference between " + scaff1[0] + " and " + scaff2[0] + " and that is: " + str(diff) + "\n"
+                    tempSev.append(severe)
+                    lgHasDiff = True
+                elif diff > float(args.moderate):
+                    moderate = "There is a moderate difference between " + scaff1[0] + " and " + scaff2[0] + " and that is: " + str(diff) + "\n"
+                    tempMod.append(moderate)
+                    lgHasDiff = True
+                j += 1
+            
+            # add index of linkage group which had a difference
+            if aboveTInd[index3] not in linkageGroupInd and lgHasDiff == True:
+                lgHasDiff = False    
+                linkageGroupInd.append(aboveTInd[index3])
+                severeScaffs.append(tempSev)
+                moderateScaffs.append(tempMod)
+            index3 += 1
+        index2 += 1
 
 # close the file
 f1.close()
 
+counter = 0
+
 # write severeScaffs and moderateScaffs to log
-with open(args.output, "x") as toWrite:
-	toWrite.write("The severe differences are:\n")	
-	for i in severeScaffs:
-		toWrite.write(i)
-		toWrite.write("\n")
-	toWrite.write("\nThe moderate differences are:\n")
-	for i in moderateScaffs:
-		toWrite.write(i)
-		toWrite.write("\n")
+with open(args.output, "x") as toWrite:		
+    for i in linkageGroupInd:
+    
+        # write and print linkage group number and severe differences
+        if len(severeScaffs[counter]) != 0:
+            sevIntro = "The severe differences in linkage group: " + str(i) + " are:\n\n"
+            toWrite.write(sevIntro)
+            toWrite.writelines(severeScaffs[counter])
+            toWrite.write("\n")
+
+        # write and print linkage group number and moderate differences
+        if len(moderateScaffs[counter]) != 0:
+            modIntro = "The moderate differences in linkage group: " + str(i) + " are:\n\n"
+            toWrite.write(modIntro)
+            toWrite.writelines(moderateScaffs[counter])
+            toWrite.write("\n")
+        
+        # increment counter
+        counter += 1
 
 # close the file 
 toWrite.close()
+
+# print log in terminal
+with open(args.output, "r") as toRead:
+    for i in toRead:
+        print(i)
+        
+# close the file
+toRead.close()
