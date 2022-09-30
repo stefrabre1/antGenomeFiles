@@ -21,6 +21,8 @@ severeScaffs = []
 index1 = 0
 index2 = 0
 index3 = 0
+modGaps = 0
+sevGaps = 0
 skip2Lines = 2
 lgHasDiff = False
 
@@ -63,10 +65,12 @@ with open(args.input) as f1:
                     severe = "There is a severe difference between " + scaff1[0] + " and " + scaff2[0] + " and that is: " + str(diff) + "\n"
                     tempSev.append(severe)
                     lgHasDiff = True
+                    sevGaps += 1
                 elif diff > float(args.moderate):
                     moderate = "There is a moderate difference between " + scaff1[0] + " and " + scaff2[0] + " and that is: " + str(diff) + "\n"
                     tempMod.append(moderate)
                     lgHasDiff = True
+                    modGaps += 1
                 j += 1
             
             # add index of linkage group which had a difference
@@ -87,8 +91,9 @@ counter = 0
 with open(args.output, "x") as toWrite:		
     
     # write and print header for file
-    header = "Out of " + str(len(tempList)) + " linkage groups, " + str(len(aboveTInd)) + " had more than " + str(args.threshold) + " scaffolds, out of those " + str(len(aboveTInd)) + " groups, " + str(len(linkageGroupInd)) + " had moderate to severe gaps.\n\n"   
+    header = "Out of " + str(len(tempList)) + " linkage groups, " + str(len(aboveTInd)) + " had more than " + str(args.threshold) + " scaffolds, out of those " + str(len(aboveTInd)) + " groups, " + str(len(linkageGroupInd)) + " had moderate to severe gaps. There are a total of " + str(sevGaps) + " severe gaps, and " + str(modGaps) + " moderate gaps across all linkage groups\n\n"   
     toWrite.write(header)
+    print(header + "See: " + str(args.output) + " for a more detailed log.")
     for i in linkageGroupInd:
     
         # write and print linkage group number and severe differences
@@ -110,11 +115,3 @@ with open(args.output, "x") as toWrite:
 
 # close the file 
 toWrite.close()
-
-# print log in terminal
-with open(args.output, "r") as toRead:
-    for i in toRead:
-        print(i)
-        
-# close the file
-toRead.close()
