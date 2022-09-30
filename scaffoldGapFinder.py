@@ -85,6 +85,10 @@ counter = 0
 
 # write severeScaffs and moderateScaffs to log
 with open(args.output, "x") as toWrite:		
+    
+    # write and print header for file
+    header = "Out of " + str(len(tempList)) + " linkage groups, " + str(len(aboveTInd)) + " had more than " + str(args.threshold) + " scaffolds, out of those " + str(len(aboveTInd)) + " groups, " + str(len(linkageGroupInd)) + " had moderate to severe gaps.\n\n"   
+    toWrite.write(header)
     for i in linkageGroupInd:
     
         # write and print linkage group number and severe differences
