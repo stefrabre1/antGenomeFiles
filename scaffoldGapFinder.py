@@ -91,9 +91,9 @@ counter = 0
 with open(args.output, "x") as toWrite:		
     
     # write and print header for file
-    header = "Out of " + str(len(tempList)) + " linkage groups, " + str(len(aboveTInd)) + " had more than " + str(args.threshold) + " scaffolds, out of those " + str(len(aboveTInd)) + " groups, " + str(len(linkageGroupInd)) + " had moderate to severe gaps. There are a total of " + str(sevGaps) + " severe gaps, and " + str(modGaps) + " moderate gaps across all linkage groups\n\n"   
+    header = "Out of " + str(len(tempList)) + " linkage groups, " + str(len(aboveTInd)) + " had more than " + str(args.threshold) + " scaffolds. Out of those " + str(len(aboveTInd)) + " groups, " + str(len(linkageGroupInd)) + " had moderate to severe gaps. \nThere are a total of " + str(sevGaps) + " severe gaps and " + str(modGaps) + " moderate gaps across all linkage groups\n\n"   
     toWrite.write(header)
-    print(header + "See: " + str(args.output) + " for a more detailed log.")
+    print("\n" + header + "See: " + str(args.output) + " for a more detailed log.\n")
     for i in linkageGroupInd:
     
         # write and print linkage group number and severe differences
