@@ -1,19 +1,19 @@
 # antGenomeFiles
-Various python and bash scripts which organize genomic data extracted using unfiltered VCF (find link!), into a format which can be input into MST_Map (find link!)
+Various python scripts which are used to analyze and organize genomic data.
+
+The first script: VcfToMst translates data output from [unfiltered VCF](https://vcftools.github.io/index.html), into a format which can be input into [MST_Map](http://www.mstmap.org/) for the creation of linkage maps.
+
+The second script: scaffoldGapFinder is a diagnostic script which reads the output of MSTMap and highlights large linkage groups and significant gaps between scaffolds.
 
 # Necessary tools/APIs
-A linux/unix system is required to run these scripts. [Singularity](https://docs.sylabs.io/guides/3.0/user-guide/quick_start.html) must also be installed. 
+[Python 3](https://www.python.org/download/releases/3.0/) and [Pandas API](https://pandas.pydata.org/pandas-docs/stable/index.html) must be installed to run these scripts. 
 
 # Usage
 TODO: 
 
--create overarching BASH script for numToAlpha, dup,NumToAlpha, transpose, and all BASH commands inbetween said scripts
-
--get singularity image from Daniela
+-create overarching BASH (idealy pure python) script for numToAlpha, dup,NumToAlpha, transpose, and all BASH commands inbetween said scripts
 
 -create simple example showing running of script
-
--create separate file/git for numberParser and it's own readme
 
 # Contributors
 Lead researcher/data scientist: Daniela Zarate
