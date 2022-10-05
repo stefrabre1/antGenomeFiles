@@ -1,0 +1,22 @@
+# INPUT FILES
+[FILENAME].012
+[FILENAME].012.indv
+[FILENAME].012.pos
+
+# OPTIONS
+TODO: what options are necessary to add here?
+Jessica's vs husbands methods
+
+# MCT HEADER 
+population_type	DH
+population_name	[NAME]
+distance_function	kosambi
+cut_off_p_value	0.00005
+no_map_dist	30
+no_map_size	1
+missing_threshold	0.2
+estimation_before_clustering	no
+detect_bad_data	yes
+objective_function	ML
+number_of_loci	3780
+number_of_individual	83
