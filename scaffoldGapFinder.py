@@ -96,14 +96,14 @@ with open(args.output, "x") as toWrite:
     print("\n" + header + "See: " + str(args.output) + " for a more detailed log.\n")
     for i in linkageGroupInd:
     
-        # write and print linkage group number and severe differences
+        # write linkage group number and severe differences
         if len(severeScaffs[counter]) != 0:
             sevIntro = "The severe differences in linkage group: " + str(i) + " are:\n\n"
             toWrite.write(sevIntro)
             toWrite.writelines(severeScaffs[counter])
             toWrite.write("\n")
 
-        # write and print linkage group number and moderate differences
+        # write linkage group number and moderate differences
         if len(moderateScaffs[counter]) != 0:
             modIntro = "The moderate differences in linkage group: " + str(i) + " are:\n\n"
             toWrite.write(modIntro)
