@@ -1,7 +1,7 @@
 # antGenomeFiles
 Various python scripts which are used to analyze and organize genomic data.
 
-The first script: VcfToMst translates data output from [unfiltered VCF](https://vcftools.github.io/index.html), into a format which can be input into [MST_Map](http://www.mstmap.org/) for the creation of linkage maps.
+The first script: vcfToMst translates data output from [unfiltered VCF](https://vcftools.github.io/index.html) into a format which can be input into [MST_Map](http://www.mstmap.org/) for the creation of linkage maps.
 
 The second script: scaffoldGapFinder is a diagnostic script which reads the output of MSTMap and highlights large linkage groups and significant gaps between scaffolds.
 
@@ -10,8 +10,6 @@ The second script: scaffoldGapFinder is a diagnostic script which reads the outp
 
 # Usage
 TODO: 
-
--create overarching BASH (idealy pure python) script for numToAlpha, dup,NumToAlpha, transpose, and all BASH commands inbetween said scripts
 
 -create simple example showing running of script
 
