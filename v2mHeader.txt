@@ -1,11 +1,15 @@
 # INPUT FILES
-[FILENAME].012
-[FILENAME].012.indv
-[FILENAME].012.pos
+testFiles/polygood.012
+testFiles/polygood.012.indv
+testFiles/polygood.012.pos
 
 # OPTIONS
-TODO: what options are necessary to add here?
-Jessica's vs husbands methods
+
+#remove any extensions appended to the individuals (y/n)
+REMOVE EXTENSIONS: 
+
+#use Purcell or [husbands] method 
+METHOD: 
 
 # MCT HEADER 
 population_type	DH
@@ -18,5 +22,5 @@ missing_threshold	0.2
 estimation_before_clustering	no
 detect_bad_data	yes
 objective_function	ML
-number_of_loci	3780
+number_of_loci	7560
 number_of_individual	83
