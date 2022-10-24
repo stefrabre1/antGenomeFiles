@@ -15,7 +15,7 @@ METHOD:
 population_type	DH
 population_name	[NAME]
 distance_function	kosambi
-cut_off_p_value	0.00005
+cut_off_p_value	0.000001
 no_map_dist	30
 no_map_size	1
 missing_threshold	0.2

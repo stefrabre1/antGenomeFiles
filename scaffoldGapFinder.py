@@ -7,10 +7,10 @@ import argparse
 
 parser = argparse.ArgumentParser(description='find the difference between genetic scaffolds and save ones above certain thresholds')
 parser.add_argument('--input', help='filename for the input file')
-parser.add_argument('--output', help='filename for the output file', default="out")
-parser.add_argument('--threshold', help='only extract values strictly greater than the threshold')
-parser.add_argument('--moderate', help='define what is a moderate difference between scaffolds')
-parser.add_argument('--severe', help='define what is a severe difference between scaffolds')
+parser.add_argument('--output', help='filename for the output file', default="scaffoldGapsOut.txt")
+parser.add_argument('--threshold', help='only extract values strictly greater than the threshold', default=15)
+parser.add_argument('--moderate', help='define what is a moderate difference between scaffolds', default=30)
+parser.add_argument('--severe', help='define what is a severe difference between scaffolds', default=50)
 parser.add_argument('--debug', help='print debug output', action="store_true")
 args = parser.parse_args()
 
@@ -62,12 +62,12 @@ with open(args.input) as f1:
                     break 		
                 diff = float(scaff2[1]) - float(scaff1[1])
                 if diff > float(args.severe):
-                    severe = "There is a severe difference between " + scaff1[0] + " and " + scaff2[0] + " and that is: " + str(diff) + "\n"
+                    severe = scaff1[0] + " and " + scaff2[0] + ": " + str(diff) + "\n"
                     tempSev.append(severe)
                     lgHasDiff = True
                     sevGaps += 1
                 elif diff > float(args.moderate):
-                    moderate = "There is a moderate difference between " + scaff1[0] + " and " + scaff2[0] + " and that is: " + str(diff) + "\n"
+                    moderate = scaff1[0] + " and " + scaff2[0] + ": " + str(diff) + "\n"
                     tempMod.append(moderate)
                     lgHasDiff = True
                     modGaps += 1
@@ -85,27 +85,38 @@ with open(args.input) as f1:
 # close the file
 f1.close()
 
+# count number of linkage groups with severe gaps in them
+sevCount = 0
+modCount = 0
+tempInd = 0
+for i in severeScaffs:
+    if len(severeScaffs[tempInd]) != 0:
+        sevCount += 1
+    if len(moderateScaffs[tempInd]) != 0:
+        modCount += 1
+    tempInd += 1
+
 counter = 0
 
 # write severeScaffs and moderateScaffs to log
 with open(args.output, "x") as toWrite:		
     
     # write and print header for file
-    header = "Out of " + str(len(tempList)) + " linkage groups, " + str(len(aboveTInd)) + " had more than " + str(args.threshold) + " scaffolds. Out of those " + str(len(aboveTInd)) + " groups, " + str(len(linkageGroupInd)) + " had moderate to severe gaps. \nThere are a total of " + str(sevGaps) + " severe gaps and " + str(modGaps) + " moderate gaps across all linkage groups\n\n"   
+    header = "Out of " + str(len(tempList)) + " linkage groups, " + str(len(aboveTInd)) + " had more than " + str(args.threshold) + " scaffolds. Out of those " + str(len(aboveTInd)) + " groups, " + str(sevCount) + " had severe gaps and " + str(modCount) + " had moderate gaps.\nThere are a total of " + str(sevGaps) + " severe gaps and " + str(modGaps) + " moderate gaps across " + str(len(linkageGroupInd)) + " linkage groups\n\n"   
     toWrite.write(header)
     print("\n" + header + "See: " + str(args.output) + " for a more detailed log.\n")
     for i in linkageGroupInd:
     
         # write linkage group number and severe differences
         if len(severeScaffs[counter]) != 0:
-            sevIntro = "The severe differences in linkage group: " + str(i) + " are:\n\n"
+            sevIntro = "~The severe differences in linkage group: " + str(i) + " are:\n\n"
             toWrite.write(sevIntro)
             toWrite.writelines(severeScaffs[counter])
             toWrite.write("\n")
 
         # write linkage group number and moderate differences
         if len(moderateScaffs[counter]) != 0:
-            modIntro = "The moderate differences in linkage group: " + str(i) + " are:\n\n"
+            modIntro = "~The moderate differences in linkage group: " + str(i) + " are:\n\n"
             toWrite.write(modIntro)
             toWrite.writelines(moderateScaffs[counter])
             toWrite.write("\n")
