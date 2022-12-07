@@ -3,14 +3,15 @@ testFiles/polygood.012
 testFiles/polygood.012.indv
 testFiles/polygood.012.pos
 
-# OPTIONS
+//remove any extensions appended to the individuals (y/n)
+# REMOVE EXTENSIONS 
+//TODO: ask about how important this is (when might extensions not be added)
 
-#remove any extensions appended to the individuals (y/n)
-REMOVE EXTENSIONS: 
+//use Brelsford or Purcell method 
+# METHOD
+Brelsford
 
-#use Purcell or [husbands] method 
-METHOD: 
-
+//header for MCTMap input
 # MCT HEADER 
 population_type	DH
 population_name	[NAME]
@@ -22,5 +23,3 @@ missing_threshold	0.2
 estimation_before_clustering	no
 detect_bad_data	yes
 objective_function	ML
-number_of_loci	7560
-number_of_individual	83

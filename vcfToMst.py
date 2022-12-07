@@ -50,21 +50,40 @@ temp = file012T.transpose()
 temp.reset_index(drop=True, inplace=True)
 file012T = temp.transpose()
 
-# convert numbers to alpha and create a copy of the inverse conversion
-alphaFile = file012T.replace(to_replace=[-1, 0, 1, 2], value=['U', 'A', 'B', 'A'])
-alphaInverseFile = file012T.replace(to_replace=[-1, 0, 1, 2], value=['U', 'B', 'A', 'B'])
+# extract method from headerFile 
+index = 0
+for line in headerContent:
+    index += 1
+    if line == '# METHOD':
+        method = headerContent[index]
+        break
 
-#TODO: create the same thing but for husband's method
-
-# combine alphaFile and alphaFileInverse
-combo = pd.concat([alphaFile, alphaInverseFile])
-combo.reset_index(drop=True, inplace=True)
+if method == 'Purcell':
+    alphaFile = file012T.replace(to_replace=[-1, 0, 1, 2], value=['U', 'A', 'B', 'A'])
+    alphaInverseFile = file012T.replace(to_replace=[-1, 0, 1, 2], value=['U', 'B', 'A', 'B'])
+    combo = pd.concat([alphaFile, alphaInverseFile])
+    combo.reset_index(drop=True, inplace=True)
+elif method == 'Brelsford':
+    alphaFile = file012T.replace(to_replace=[-1, 0, 1, 2], value=['U', 'A', 'B', 'B'])
+    alphaInverseFile = file012T.replace(to_replace=[-1, 0, 1, 2], value=['U', 'B', 'A', 'A'])
+    altAlpha = file012T.replace(to_replace=[-1, 0, 1, 2], value=['U', 'A', 'A', 'B'])
+    altAlphaInverse = file012T.replace(to_replace=[-1, 0, 1, 2], value=['U', 'B', 'B', 'A'])
+    combo = pd.concat([alphaFile, alphaInverseFile, altAlpha, altAlphaInverse])
+    combo.reset_index(drop=True, inplace=True)
+else:
+    #TODO: throw error
+    print('Please fill out # METHOD field in the header file')
+    
 
 # TODO: Make these optional if user doesn't want extension stripping
 #fileIndvIns = pd.DataFrame([['locus']], columns=fileIndv.columns)
 #fileIndv2 = pd.concat([fileIndvIns, fileIndv])
 #fileIndv2.reset_index(drop=True, inplace=True)
 #fileIndvT = fileIndv2.transpose()
+
+# count rows and columns and instantiate numOfInd and numOfLoci respectively
+numOfInd = combo.shape[1] - 1
+numOfLoci = combo.shape[0]
 
 # insert top row using transposed fileIndv
 fileIndvT = fileIndv.transpose()
@@ -74,15 +93,18 @@ headerless.reset_index(drop=True, inplace=True)
 # extract MCTHeader TODO: make if statements finding loci and pop_num and adding them automatically
 index = 0
 MCTHeader = []
-for line2 in headerContent:
+for line in headerContent:
     index += 1
-    if line2 == '# MCT HEADER':
+    if line == '# MCT HEADER':
         while True:
             if index >= len(headerContent):
                 break
             #tempList = headerContent[index].split()    might be usefull for forcing tab separation in MCTHeader 
             MCTHeader.append(headerContent[index] + '\n')
             index += 1
+
+MCTHeader.append('number_of_loci' + '\t' + str(numOfLoci) + '\n')
+MCTHeader.append('number_of_individual' + '\t' + str(numOfInd) + '\n')
 MCTHeader.append('\n')
 
 # write header and dataframe to file
