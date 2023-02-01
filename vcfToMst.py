@@ -6,16 +6,39 @@ from os import listdir
 import argparse
 import pandas as pd
 
+# set up parser to accept command line arguments
 parser = argparse.ArgumentParser(description='Organizes data from VCF into a format which can be read by MSTLinkage.')
 parser.add_argument('--header', help='header file with options for how the program is run', default='v2mHeader.txt')
 parser.add_argument('--output', help='filename for the output file', default='readyForMST.txt')
 parser.add_argument('--debug', help='print debug output', action="store_true")
 args = parser.parse_args()
 
+# Define constants
 indx012 = 1
 indxIndv = 2
 indxPos = 3
 headerContent = []
+
+# Finds the index of where specific data is in a list
+# param: headerList, a list containing commands for running this program
+#        str, the section of the headerFile to be read
+# return: the index of the line immediately following the specified section
+def readHeader(headerList, section):
+    index = 0
+    for line in headerList:
+        index += 1
+        if line == section:
+            return index
+        
+# Transposes a file and resets its index
+# param: toTranspose, file which we want to transpose
+# return: a file which has been transposed and had its index reset
+def freshTranspose(toTranspose):
+    transposed = toTranspose.transpose()
+    transposed.reset_index(drop=True, inplace=True)
+    return transposed
+
+
 
 # extract filenames from header
 with open(args.header) as headerFile:
@@ -33,12 +56,12 @@ with open(headerContent[indxIndv]) as indvExt:
         noExt.append(temp[0])
 fileIndv = pd.DataFrame({None:noExt})
 #fileIndv = pd.read_csv(headerContent[indxIndv], sep='\t', header = None) TODO: keeping this until I can make it optional
-headerFile.close()
 
 # delete the index of the 012 file and transpose
 file012 = file012.drop(file012.columns[0], axis = 1)
-file012T = file012.transpose()
-file012T.reset_index(drop=True, inplace=True)
+#file012T = file012.transpose()
+#file012T.reset_index(drop=True, inplace=True)
+file012T = freshTranspose(file012)
 
 # replace tab with underscore in filePos 
 filePos = pd.read_csv(headerContent[indxPos], sep='\n', header = None)
@@ -46,8 +69,9 @@ filePosUnder = filePos.replace(to_replace='\t', regex=True, value='_')
 
 # make filePosUnder first column in file012T
 file012T.insert(0, column=None, value=filePosUnder)
-temp = file012T.transpose()
-temp.reset_index(drop=True, inplace=True)
+#temp = file012T.transpose()
+#temp.reset_index(drop=True, inplace=True)
+temp = freshTranspose(file012T)
 file012T = temp.transpose()
 
 # extract method from headerFile 
