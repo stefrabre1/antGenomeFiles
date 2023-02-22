@@ -6,7 +6,6 @@ import os
 import re
 from os import listdir
 import argparse
-import numpy
 
 # Set up a very helpful argument parser ecosystem to read in arguments passed through on the command line
 parser = argparse.ArgumentParser(

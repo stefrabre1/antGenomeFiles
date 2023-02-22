@@ -6,7 +6,6 @@ import os
 import re
 from os import listdir
 import argparse
-import numpy
 
 # Set up a very helpful argument parser ecosystem to read in arguments passed through on the command line
 parser = argparse.ArgumentParser(
@@ -44,6 +43,13 @@ def getAlleleCount(value, n):
 def getColumn(line, n):
     return str(line.split()[n])
     
+# Determines if either homogeneous allele is 0 or 1
+# param: hom1, an integer representing homogeneous allele counts
+#        hom2, an integer representing homogeneous allele counts
+# return: a boolean value, true if either hom1 or hom2 is 0 or 1
+def zeroOrOne(hom1, hom2):
+    return hom1 or hom2 == 0 or 1
+    
 # compares heterogenous allele count to the summation of all alleles and checks if it's above a certain threshold
 # param: line, a line read from a file
 # return: a boolean value, true if above threshold, false if below
@@ -62,12 +68,11 @@ def homoBalanced(line):
     column = getColumn(line, ALLELE_COL)
     firstHom = getAlleleCount(column, HOM1)
     secondHom = getAlleleCount(column, HOM2)
-    combined = firstHom + secondHom
-    
-    if combined == 0:
+
+    if zeroOrOne(firstHom, secondHom):
         return True
 
-    return not HOM_THRESHOLD < (firstHom / combined) < (1 - HOM_THRESHOLD)
+    return not (HOM_THRESHOLD < (firstHom / (firstHom + secondHom)) < (1 - HOM_THRESHOLD))
 
 # writes the first three columns to a file if hetero allele is above threshold or either homo allele is 0 or 1
 # param: line, a line read from a file
