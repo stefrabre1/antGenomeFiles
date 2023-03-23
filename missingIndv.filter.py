@@ -13,7 +13,7 @@ parser = argparse.ArgumentParser(
     epilog="Good Luck with Your Bioinformatics! This script is written and directed by Daniela Zarate PHD")
 parser.add_argument('--maxMISS', help='maximum percent of missing data (INT)', default="0.25")
 parser.add_argument('--debug', help='print debug output', action="store_true")
-parser.add_argument('--path', help='directory to read files from')
+parser.add_argument('--path', help='directory to read files from', default=".")
 
 ## Global Variables
 
@@ -42,7 +42,7 @@ def maxMissOverMin(line):
 def measureMaxMiss(line, good, bad, badIndv):
     if ( maxMissOverMin(line) == True ):
         bad.write(line)
-        badIndv.write(line.split()[0])
+        badIndv.write(line.split()[0] + '\n')
     else:
         good.write(line)
 
@@ -59,11 +59,11 @@ print("The maximum percent of missing data allowed per individual is: %f" % MAX_
 
 # Find imiss file, then parse data from it to goodData, badData, and badIndv files        
 for doc in os.listdir(args.path):
-    if doc.endswith('zcamp.imiss'):
+    if doc.endswith('.imiss'):
         og_file = os.path.join(args.path, doc)
-        good = open(os.path.join(args.path, "goodData.txt"), 'w+')
-        bad = open(os.path.join(args.path, "badData.txt"), 'w+')
-        badIndv = open(os.path.join(args.path, "badIndv.txt"), 'w+')
+        good = open(os.path.join(args.path, str(doc) + ".goodData.txt"), 'w+')
+        bad = open(os.path.join(args.path, str(doc) + ".badData.txt"), 'w+')
+        badIndv = open(os.path.join(args.path, str(doc) + ".badIndv.txt"), 'w+')
         with open(og_file, 'r') as a_file:
             for line in a_file:
                 # always write column headers to file
