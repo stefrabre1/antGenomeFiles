@@ -23,13 +23,13 @@ args = parser.parse_args()
 BAD_SCAFFS = []
 HOM1 = '0/0'
 HOM2 = '1/1'
-FIX = './.'
+FIX = '0/1'
 
 ## Functions
 
 # Determines if the first or second homogeneous allele is below or at threshold
 # param: line, a line from a file of scaffolds
-# return: an int value, 1 if the first allele is at or below threshold, 2 if the second allele is, -1 if neither
+# return: an int value, 1 if the first allele is at threshold, 2 if the second allele is, -1 if neither
 def hom1Or2(line):
     if int(str(line.split()[2]).split('/')[0]) == 1:
         return 1
@@ -38,13 +38,13 @@ def hom1Or2(line):
     return -1
 
 # Determines if a line contains bad data by checking against a list 
-# param: aList, represents a list of known scaffolds with bad data
-#        aKey, the scaffold we're checking against the bad data list
+# param: aLine, a line to compare 
+#        aList, the scaffold we're checking against the bad data list
 # return: an int value, 1 the first allele is 1, 2 if the second is 1, 0 if neither is 1
-def checkBadLine(scaff, aList):
+def checkBadLine(aLine, aList):
     for line in aList:
         key = line.split()[0] + '\t' + line.split()[1]
-        if (scaff.startswith(key)):
+        if (aLine.startswith(key)):
             return hom1Or2(line)
     return 0
     
