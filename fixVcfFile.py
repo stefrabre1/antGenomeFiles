@@ -88,7 +88,7 @@ with open(args.vcfFile, 'r') as a_file:
     
     for line in a_file:
         
-        if not line.startswith('Scaffold') or line.startswith('Contig'):
+        if not line.startswith('Scaffold') or not line.startswith('Contig'):
             filtered.write(line)
         else:
             processLine(line, BAD_SCAFFS, filtered)
