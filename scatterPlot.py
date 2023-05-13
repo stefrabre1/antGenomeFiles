@@ -5,7 +5,8 @@ import matplotlib.pyplot as plt
 
 # set up parser to accept command line arguments
 parser = argparse.ArgumentParser(description='Creates scatter plots of plink files')
-parser.add_argument('--input', help='file to be read', default='v2mHeader.txt')
+parser.add_argument('--input', help='file to be read')
+parser.add_argument('--image', help='the type of scatterplot to be saved', default = "no_star")
 parser.add_argument('--debug', help='print debug output', action="store_true")
 args = parser.parse_args()
 
@@ -18,6 +19,11 @@ y = df[2]
 
 # plot the first two information columns in a scatter
 plt.scatter(x, y)
+plt.grid()
+imageName = args.input + '.png'
+
+if args.image == "no_star":
+    plt.savefig(imageName)
 
 # find the mean of x and y
 meanX = sum(abs(x))/len(x)
@@ -50,6 +56,9 @@ for i in range(len(x)):
 
 # show the final plot
 plt.show()
+
+if args.image != "no_star":
+    plt.savefig(imageName)
 
 refined = False
 # check with user if they want to delete points which were too far from the mean
@@ -89,4 +98,5 @@ if refined == True:
 else:
     message2 = "No changes made to " + args.input
     print(message2)
+
     
