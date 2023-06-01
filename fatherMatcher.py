@@ -148,8 +148,8 @@ with open(args.input, 'r') as a_file:
         
         typeList = []            
         for i in answer.split():
-            if int(i) not in [1, 2, 3, 4, 5, 6, 7, 8] or len(answer.split()) > 8:
-                print("Please input a valid type. Should be integers between 1-8 seperated by a space\nThere shouldn't be more than 8 integers in your input\n")
+            if int(i) not in [1, 2, 3, 4, 5, 6, 7, 8] or int(i) in typeList:
+                print("Please input a valid type. Should be integers between 1-8 seperated by a space\nThere shouldn't be any duplicate types input\n")
                 typeList = []
                 errorFlag = True
                 break
