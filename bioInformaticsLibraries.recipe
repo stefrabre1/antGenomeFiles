@@ -1,0 +1,40 @@
+Bootstrap: docker
+From: ubuntu:20.04
+ 
+%post
+# set system time
+    export TZ=UTC
+    export DEBIAN_FRONTEND=noninteractive
+
+# Install dependencies 
+    apt-get update && apt-get install -y  \
+        apt-utils \
+        pkg-config \
+        autoconf \
+        g++ \
+        gcc \
+        python3-dev \
+	python3-setuptools \
+        python3-pip \
+	libtiff5-dev \
+	libjpeg8-dev \
+	libopenjp2-7-dev \
+	zlib1g-dev \
+    	libfreetype6-dev \
+	liblcms2-dev \
+	libwebp-dev \
+	tcl8.6-dev \
+	tk8.6-dev python3-tk \
+    	libharfbuzz-dev \
+	libfribidi-dev \
+	libxcb1-dev \
+ 
+# Install tools and libraries for python
+cd opt
+pip3 install pandas
+pip3 install argparse
+pip3 install matplotlib
+pip3 install numpy
+
+%runscript
+"$@"

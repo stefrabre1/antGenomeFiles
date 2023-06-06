@@ -11,11 +11,14 @@ parser.add_argument('--debug', help='print debug output', action="store_true")
 args = parser.parse_args()
 
 # read file into a pandas dataframe
-df = pd.read_csv(args.input, sep = '\t', header = None)
+df = pd.read_csv(args.input, sep = ' ', header = None)
+
+# delete column 1
+df.drop(df.columns[0], axis=1, inplace = True)
 
 # Read columns 1 and 2 into a scatterplot
-x = df[1]
-y = df[2]
+x = df[2].astype(float)
+y = df[3].astype(float)
 
 # plot the first two information columns in a scatter
 plt.scatter(x, y)
@@ -40,8 +43,9 @@ for i in range(len(x)):
         potentialDeleteX.append(x[i])
         potentialDeleteY.append(y[i])
         
+        
         plt.plot(x[i], y[i], c = "red", marker = '*', markersize = 10)
-        plt.text(x[i], y[i], df[0][i], fontsize = 9)
+        plt.text(x[i], y[i], df[1][i], fontsize = 9)
  
         indArray.append(i)
  
@@ -50,12 +54,9 @@ for i in range(len(x)):
         potentialDeleteY.append(y[i])
 
         plt.plot(x[i], y[i], c = "red", marker = '*', markersize = 10)
-        plt.text(x[i], y[i], df[0][i], fontsize = 9)
+        plt.text(x[i], y[i], df[1][i], fontsize = 9)
 
         indArray.append(i)
-
-# show the final plot
-plt.show()
 
 if args.image != "no_star":
     plt.savefig(imageName)
@@ -73,7 +74,7 @@ for i in range(len(indArray)):
         totalDist = distY
 
     while True:
-        prompt = "Would you like to delete " + df[0][i] + "? (distance from mean: " + str(round(totalDist, 2)) + ") (y/n): "
+        prompt = "Would you like to delete " + df[1][i] + "? (distance from mean: " + str(round(totalDist, 2)) + ") (y/n): "
         answer = input(prompt)
         
         if not any(x in answer for x in ['y', 'n']):
@@ -83,20 +84,30 @@ for i in range(len(indArray)):
             break
             
     if answer == 'y':
-        print("\nDeleting " + df[0][i] + "\n")
+        print("\nDeleting " + df[1][i] + "\n")
         df.drop(indArray[i], inplace = True)
         refined = True
     else:
-        print("\nKeeping " + df[0][i] + "\n")
+        print("\nKeeping " + df[1][i] + "\n")
         
 # write dataframe with deleted points to file.
 if refined == True:
     output = args.input + ".refined"
-    message1 = "Changes recorded to " + output
-    print(message1)
-    df.to_csv(output, sep='\t', header=None, index=None) 
+    refinedFile = "Changes recorded to " + output
+    print(refinedFile)
+    df.to_csv(output, sep='\t', header=None, index=None)
+    
+    x2 = df[2].astype(float)
+    y2 = df[3].astype(float)
+    plt.clf()
+    plt.scatter(x2, y2)
+    plt.grid()
+    refImage = args.input + ".refined.png" 
+    refinedPng = "Updated scatterplot image is labeled: " + refImage
+    print(refinedPng)
+    plt.savefig(refImage)
 else:
-    message2 = "No changes made to " + args.input
-    print(message2)
+    notRefined = "No changes made to " + args.input
+    print(notRefined)
 
     
