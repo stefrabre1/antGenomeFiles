@@ -88,6 +88,13 @@ beginScaff = 0
 endScaff = 0
 pSum = 0
 sortedP = pd.DataFrame()
+x = []
+y = []
+l = 0
+
+fig = plt.gcf()
+fig.set_size_inches(25, 25)
+fig.set_dpi(500)
 
 # sort by position for each scaffold
 while endScaff < sortedScaff.shape[0] - 1:
@@ -99,12 +106,7 @@ while endScaff < sortedScaff.shape[0] - 1:
         if endScaff == sortedScaff.shape[0] - 1:
             break
         newScaff = sortedScaff.iat[endScaff, 0]
-        
-    # if endScaff - beginScaff > -1:
-        # tempDf4 = sortedScaff.loc[beginScaff:endScaff]
-    # else:
-        # continue
-    
+           
     tempDf4 = sortedScaff.loc[beginScaff:endScaff]
     
     beginScaff = endScaff + 1
@@ -112,29 +114,33 @@ while endScaff < sortedScaff.shape[0] - 1:
 
     tempDf4[2] += pSum    
     pSum = tempDf4[2].iloc[-1] + SPACER
+
+    x = tempDf4[1].astype(float)
+    y = tempDf4[2].astype(float)
+    messageStart = "Scaff #" + str(sameScaff) + " start"
+    messageEnd = "Scaff #" + str(sameScaff) + " end"
+    
+    if x is not None and y is not None:
+        plt.text(x.iat[0], y.iat[0], messageStart, fontsize = 9, c = "blue") 
+        plt.text(x.iat[-1], y.iat[-1], messageEnd, fontsize = 9, c = "red")
+    
+    plt.scatter(x, y)
     
     sortedP = sortedP.append(tempDf4)
 
-# iterate through scaffs column row by row, counting how many of the same value there are
-# Keep track of there a value ends, make a range from end of last scaffold to end of present scaffold
-    # iloc[0:30], iloc[31:62] etc
-# For each of these ranges, make a new dataframe from toSort 
-# sort these individual dataframes by their position column
-# append each dataframe to the last and 
+imageName = "results.png"
+plt.savefig(imageName)
     
 output = args.input + ".condensed"
 sortedP.to_csv(output, sep='\t', header=None, index=None)
     
-# See the scatter
 
 # Read columns 1 and 2 into a scatterplot
-x = sortedP[1].astype(float)
-y = sortedP[2].astype(float)
-plt.clf()
+# x = sortedP[1].astype(float)
+# y = sortedP[2].astype(float)
 
-# plot the first two information columns in a scatter
-plt.scatter(x, y)
-plt.grid()
-#plt.show()
-imageName = "lmaoScatter.png"
-plt.savefig(imageName)
+# # plot the first two information columns in a scatter
+# plt.scatter(x, y)
+# plt.grid()
+# imageName = "results.png"
+# plt.savefig(imageName)
