@@ -95,6 +95,7 @@ l = 0
 fig = plt.gcf()
 fig.set_size_inches(25, 25)
 fig.set_dpi(500)
+plt.grid()
 
 # sort by position for each scaffold
 while endScaff < sortedScaff.shape[0] - 1:
