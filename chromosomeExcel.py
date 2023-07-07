@@ -92,14 +92,15 @@ sortedScaff.reset_index(inplace = True, drop = True)
 
 # sortedScaff.reset_index(inplace = True, drop = True)
 
+# variables for plotting
 beginScaff = 0
 endScaff = 0
 pSum = 0
 sortedP = pd.DataFrame()
 x = []
 y = []
-l = 0
 
+# create plot
 fig = plt.gcf()
 fig.set_size_inches(20, 20)
 fig.set_dpi(400)
@@ -109,7 +110,8 @@ plt.grid()
 while endScaff < sortedScaff.shape[0] - 1:
     sameScaff = sortedScaff.iat[endScaff, 0]
     newScaff = sortedScaff.iat[endScaff, 0]
-    
+
+    # find section of dataframe with all same scaffold numbers
     while sameScaff == newScaff:
         endScaff += 1
         if endScaff == sortedScaff.shape[0]:
@@ -118,10 +120,8 @@ while endScaff < sortedScaff.shape[0] - 1:
            
     tempDf4 = sortedScaff.loc[beginScaff:(endScaff-1)]
     
+    # if the size of the scaffold is above threshold, plot it and add to output dataframe
     if tempDf4.shape[0] >= SCAFF_THRESH:
-        #test
-        print(tempDf4.shape[0])
-    
         beginScaff = endScaff 
         tempDf4 = tempDf4.sort_values(by=[2])
 
@@ -141,8 +141,10 @@ while endScaff < sortedScaff.shape[0] - 1:
     
         sortedP = sortedP.append(tempDf4)
 
+# output image of scatter plot
 imageName = args.input + ".scatter.png"
 plt.savefig(imageName)
-    
+
+# output dataframe to file
 output = args.input + ".condensed"
 sortedP.to_csv(output, sep='\t', header=None, index=None)
