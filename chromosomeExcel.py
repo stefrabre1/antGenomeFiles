@@ -29,6 +29,11 @@ dfPos = pd.DataFrame()
 # drop columns with all NaN
 df = df.dropna(axis = 1, how = 'all')
 
+# Might need a rewrite for cases with single empty cells
+# 1. Convert all NaN cells to -1 
+# 2. Combine all columns
+# 3. Remove all rows with -1 in them 
+
 # add scaffold column
 for i in range(SCAFF_START, len(df.columns), COL_DIST):
     tempDf1 = pd.DataFrame()
