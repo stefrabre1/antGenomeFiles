@@ -1,9 +1,6 @@
 from os import listdir
 import argparse
 import pandas as pd
-import csv
-
-# just playing
 import matplotlib.pyplot as plt
 
 # set up parser to accept command line arguments
