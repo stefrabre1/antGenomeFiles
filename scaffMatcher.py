@@ -35,7 +35,6 @@ with open(args.input1, 'r') as inFile1, open("temp", 'r') as inFile2, open(outpu
         if "c29.sm_sm.rep" in line:
             outFile1.write(line)
             
-        print(".", end='')
         tempLine = line.split()[0].strip()
         
         for line2 in file2:             
@@ -44,4 +43,16 @@ with open(args.input1, 'r') as inFile1, open("temp", 'r') as inFile2, open(outpu
                 outFile2.write(line2)
     
 os.remove("temp")
+
+with open (output1, 'r') as inFile, open("uniqueGenes", 'w+') as outFile:
+    file = inFile.readlines()
+    output = []
+    count = 0
     
+    for line in file:
+        col1 = line.split()[0] + '\n'
+        if col1 not in output and col1.find('.') == -1:
+            count += 1
+            output.append(col1)
+    outFile.writelines(output)
+    print("The number of unique genes is: " + str(count))
