@@ -24,11 +24,13 @@ output2 = args.input2 + ".scaffsRemoved"
 
 # find matching data between the two files and output to corresponding files
 with open(args.input1, 'r') as inFile1, open(args.input2, 'r') as inFile2, open(output1, 'w+') as outFile1, open(output2, 'w+') as outFile2:
+    file1 = inFile1.readlines()
     file2 = inFile2.readlines()
-    for line in inFile1:
-        tempLine = line.split()[0].strip()
-        
-        for line2 in file2:             
-            if tempLine != line2.split()[0].strip():                
-                outFile1.write(line)
-                outFile2.write(line2)
+    
+    for line in file1:
+        if line not in file2:
+            outFile1.write(line)
+            
+    for line in file2:
+        if line not in file1:
+            outFile2.write(line)
